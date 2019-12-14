@@ -18,11 +18,12 @@ void DIYHUE_Register(String DIYHUE_mac) {
                  "Connection: close\r\n\r\n");
   }
 }
-void DIYHUE_sendHttpRequest(String DIYHUE_mac, int DIYHUE_button) {
+bool DIYHUE_sendHttpRequest(String DIYHUE_mac, int DIYHUE_button) {
   WiFiClient client;
   digitalWrite(DIYHUE_LED, HIGH);
   if (!client.connect(DIYHUE_bridgeIp, 80)) {    //###Registering device
     DIYHUE_Blink(200, 10); //Can't connect to hub: Just blink a bit to show this error
+    return false;
   } else {
     String DIYHUE_url = "/switch?mac=" + DIYHUE_mac + "&button=" + DIYHUE_button;
     client.print(String("GET ") + DIYHUE_url + " HTTP/1.1\r\n" +
@@ -30,6 +31,7 @@ void DIYHUE_sendHttpRequest(String DIYHUE_mac, int DIYHUE_button) {
                  "Connection: close\r\n\r\n");
   }
   digitalWrite(DIYHUE_LED, LOW);
+  return true;
 }
 String DIYHUE_macToStr(const byte* DIYHUE_mac) {
   String DIYHUE_result;

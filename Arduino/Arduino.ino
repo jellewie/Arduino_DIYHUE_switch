@@ -15,7 +15,7 @@ void setup() {
 }
 void loop() {
   for (byte i = 0; i < Amount; i++) {       //For each button
-    DIYHUE_sendHttpRequest(DIYHUE_macToStr(mac), ZGPSwitch[i]); //Send Http request with max and appropriate buttonID
+    DIYHUE_sendHttpRequest(DIYHUE_macToStr(mac), ZGPSwitch[i]); //Send Http request with max and appropriate buttonID (Also returns "TRUE" if it got send)
     delay(1000);                            //My hub doesn't seem to like updates being hammered into it, this delay will just make sure we send more updates a bit later
   }
   delay(60000);                             //Just here to pause the loop for 1 min
