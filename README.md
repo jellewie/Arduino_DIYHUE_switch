@@ -2,7 +2,7 @@
  DIYHUE hub: https://github.com/diyhue/diyHue
 
 # What you need
-Rasbarry with DIYHUE (and it's IP ofc.)
+Raspberry with DIYHUE (and it's IP ofc.)
 [ESP32](https://dl.espressif.com/dl/package_esp32_index.json)
 
 # How it works
