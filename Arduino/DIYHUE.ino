@@ -3,24 +3,24 @@
 const char* DIYHUE_bridgeIp = "192.168.1.43";    //replace with the hue emulator device IP
 const char* DIYHUE_switchType = "ZGPSwitch";
 
-void DIYHUE_Register(const byte* DIYHUE_mac) {
+void DIYHUE_Register(String DIYHUE_mac) {
   WiFiClient client;
   if (!client.connect(DIYHUE_bridgeIp, 80)) {    //###Registering device
     DIYHUE_Blink(200, 10);                //Can't connect to hub: Just blink a bit to show this error
   } else {                                //Code to execute if connected
-    String DIYHUE_url = "/switch?devicetype=" + (String)DIYHUE_switchType + "&mac=" + DIYHUE_macToStr(DIYHUE_mac);    //register device
+    String DIYHUE_url = "/switch?devicetype=" + (String)DIYHUE_switchType + "&mac=" + DIYHUE_mac;    //register device
     client.print(String("GET ") + DIYHUE_url + " HTTP/1.1\r\n" +
                  "Host: " + DIYHUE_bridgeIp + "\r\n" +
                  "Connection: close\r\n\r\n");
   }
 }
-void DIYHUE_sendHttpRequest(const byte* DIYHUE_mac, byte DIYHUE_button) {
+void DIYHUE_sendHttpRequest(String DIYHUE_mac, int DIYHUE_button) {
   WiFiClient client;
   digitalWrite(DIYHUE_LED, HIGH);
   if (!client.connect(DIYHUE_bridgeIp, 80)) {    //###Registering device
     DIYHUE_Blink(200, 10); //Can't connect to hub: Just blink a bit to show this error
   } else {
-    String DIYHUE_url = "/switch?mac=" + DIYHUE_macToStr(DIYHUE_mac) + "&button=" + DIYHUE_button;
+    String DIYHUE_url = "/switch?mac=" + DIYHUE_mac + "&button=" + DIYHUE_button;
     client.print(String("GET ") + DIYHUE_url + " HTTP/1.1\r\n" +
                  "Host: " + DIYHUE_bridgeIp + "\r\n" +
                  "Connection: close\r\n\r\n");
