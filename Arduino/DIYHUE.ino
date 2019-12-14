@@ -1,7 +1,7 @@
 #define DIYHUE_LED LED_BUILTIN
 
 #ifndef bridgeIp
-const char* DIYHUE_bridgeIp = "192.168.1.43";    //replace with the hue emulator device IP
+const char* DIYHUE_bridgeIp = "192.168.1.128";    //replace with the hue emulator device IP
 #endif
 #ifndef DIYHUE_switchType
 const char* DIYHUE_switchType = "ZGPSwitch";     //Has the buttons {34, 16, 17, 18}
