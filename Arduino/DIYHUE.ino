@@ -49,6 +49,12 @@ void DIYHUE_Blink(int DIYHUE_DelayMS, byte DIYHUE_amount) {
   }
   digitalWrite(DIYHUE_LED, LOW);
 }
+void DIYHUE_Set_bridgeIp(String DIYHUE_TEMP_bridgeIp) {
+  DIYHUE_TEMP_bridgeIp.toCharArray(DIYHUE_bridgeIp, DIYHUE_TEMP_bridgeIp.length() + 1);
+}
+String DIYHUE_Get_bridgeIp() {
+  return DIYHUE_bridgeIp;
+}
 //void DIYHUE_Sleep() {
 //  yield();
 //  delay(100);    //Just in case there still things to handle off in the background
