@@ -1,6 +1,6 @@
 #define DIYHUE_LED LED_BUILTIN
 
-#ifndef bridgeIp
+#ifndef DIYHUE_bridgeIp
 const char* DIYHUE_bridgeIp = "192.168.1.128";    //replace with the hue emulator device IP
 #endif
 #ifndef DIYHUE_switchType
