@@ -1,6 +1,9 @@
 /*
   Program written by JelleWho
   Board: https://dl.espressif.com/dl/package_esp32_index.json
+  
+  Dependencies (NOT INCLUDED!!, INCLUDE YOUR OWN OR INCLUDE IT YOURSELF)
+  https://github.com/jellewie/Arduino-WiFiManager
 */
 #include <WiFi.h>
 
