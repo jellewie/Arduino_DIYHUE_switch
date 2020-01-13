@@ -1,37 +1,43 @@
 #define DIYHUE_LED LED_BUILTIN
+#define DIYHUE_SerialEnabled                        //Disable to not send Serial debug feedback
 
 #ifndef DIYHUE_bridgeIp
-char DIYHUE_bridgeIp[] = "192.168.1.128";    //replace with the hue emulator device IP
+char DIYHUE_bridgeIp[] = "192.168.1.128";           //replace with the hue emulator device IP
 #endif
 #ifndef DIYHUE_switchType
-const char* DIYHUE_switchType = "ZGPSwitch";     //Has the buttons {34, 16, 17, 18}
+const char* DIYHUE_switchType = "ZGPSwitch";        //Has the buttons {34, 16, 17, 18}
+const byte DIYHUE_ZGPSwitch[4] = {34, 16, 17, 18};  //Http button ID to send to DIYHUE
 #endif
 
-void DIYHUE_Register(String DIYHUE_mac) {
-  WiFiClient client;
-  if (!client.connect(DIYHUE_bridgeIp, 80)) {    //###Registering device
-    DIYHUE_Blink(200, 10);                //Can't connect to hub: Just blink a bit to show this error
-  } else {                                //Code to execute if connected
-    String DIYHUE_url = "/switch?devicetype=" + (String)DIYHUE_switchType + "&mac=" + DIYHUE_mac;    //register device
-    client.print(String("GET ") + DIYHUE_url + " HTTP/1.1\r\n" +
-                 "Host: " + DIYHUE_bridgeIp + "\r\n" +
-                 "Connection: close\r\n\r\n");
-  }
+bool DIYHUE_Register(String DIYHUE_mac) {
+  String DIYHUE_TEMP = "/switch?devicetype=" + String(DIYHUE_switchType) + "&mac=" + DIYHUE_mac;    //register device
+#ifdef DIYHUE_SerialEnabled
+  Serial.println("DH: Register Request " + DIYHUE_mac);
+#endif //DIYHUE_SerialEnabled
+  return DIYHUE_Send(DIYHUE_TEMP);
 }
-bool DIYHUE_sendHttpRequest(String DIYHUE_mac, int DIYHUE_button) {
+bool DIYHUE_sendHttpRequest(String DIYHUE_mac, byte DIYHUE_button) {
+  String DIYHUE_TEMP = "/switch?mac=" + DIYHUE_mac + "&button=" + DIYHUE_ZGPSwitch[DIYHUE_button - 1];  //Send buttons pressed
+#ifdef DIYHUE_SerialEnabled
+  Serial.println("DH: Button state send " + DIYHUE_mac + " " + DIYHUE_button);
+#endif //DIYHUE_SerialEnabled
+  return DIYHUE_Send(DIYHUE_TEMP);
+}
+bool DIYHUE_Send(String DIYHUE_url) {
   WiFiClient client;
-  digitalWrite(DIYHUE_LED, HIGH);
-  if (!client.connect(DIYHUE_bridgeIp, 80)) {    //###Registering device
-    DIYHUE_Blink(200, 10); //Can't connect to hub: Just blink a bit to show this error
+  if (!client.connect(DIYHUE_bridgeIp, 80)) {           //(Try) connect to hub
+#ifdef DIYHUE_SerialEnabled
+    Serial.println("DH: #ERROR Cant connect to DIYHUE '" + String(DIYHUE_bridgeIp) + DIYHUE_url + "'");
+#endif //DIYHUE_SerialEnabled
+    DIYHUE_Blink(200, 10);                              //Can't connect to hub: Just blink a bit to show this error
     return false;
   } else {
-    String DIYHUE_url = "/switch?mac=" + DIYHUE_mac + "&button=" + DIYHUE_button;
-    client.print(String("GET ") + DIYHUE_url + " HTTP/1.1\r\n" +
-                 "Host: " + DIYHUE_bridgeIp + "\r\n" +
-                 "Connection: close\r\n\r\n");
+    client.println("GET " + DIYHUE_url + " HTTP/1.1");  //Send the data to the ub
+    client.println("Host: " + String(DIYHUE_bridgeIp));
+    client.println("Connection: close");
+    client.println();
+    return true;
   }
-  digitalWrite(DIYHUE_LED, LOW);
-  return true;
 }
 String DIYHUE_macToStr(const byte* DIYHUE_mac) {
   String DIYHUE_result;
